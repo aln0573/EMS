@@ -18,23 +18,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         minLength: 6
     },
-    phone: {
-        type: Number,
-        trim: true
-    },
-    designation: {
-        type: String,
-        required: true,
-        enum: ["Manager", "Developer", "Designer", "HR", "Accountant", "Other"],
-        default: "Other"
-    },
-    salary: {
-        type: Number,
-    },
-    profileImage: {
-        type: String,
-        default: null
-    },
     role: {
         type: String,
         enum: ["user", "admin"],

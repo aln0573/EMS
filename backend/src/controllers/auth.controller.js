@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 
 export const Register = async (req, res) => {
     try {
+        console.log("Data")
         const { name , email , password } = req.body
 
         if(!name || !email || !password){
@@ -87,3 +88,18 @@ export const Login = async (req ,res) => {
         res.status(500).json({ message: "Internal server error" })
     }
 }
+
+
+export const logout = (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict"
+    });
+
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};

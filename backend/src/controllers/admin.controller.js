@@ -2,6 +2,52 @@ import Employees from "../models/Employees.js"
 import path from 'path'
 import fs from 'fs'
 
+export const getEmployees = async (req, res) => {
+    try {
+        const {page, limit ,search = "", designation ,sortBy = "createdAt" ,sortOrder = "desc" } = req.query
+
+        const pageNumber = Number(page) || 1
+        const limitNumber = Number(limit) || 10
+
+        const query = {}
+
+        if(search) {
+            query.$or = [
+                {name: { $regex: search, $options: "i"}},
+                {email: { $regex: search, $options: "i"}},
+                {phone: { $regex: String(search), $options: "i"}},
+                {designation: { $regex: search, $options: "i"}},
+            ]
+        }
+
+        if(designation) {
+            query.designation = designation
+        }
+
+        const sortOptions = {}
+        sortOptions[sortBy] = sortOrder === "asc" ? 1 : -1
+
+        const skip = (pageNumber - 1) * limitNumber
+
+        const employees = await Employees.find(query).sort(sortOptions).skip(skip).limit(limitNumber)
+
+        const totalEmployees = await Employees.countDocuments(query)
+
+        res.status(200).json({
+            total: totalEmployees,
+            page: pageNumber,
+            limit: limitNumber,
+            totalPages: Math.ceil(totalEmployees / limitNumber),
+            employees
+        })
+
+    } catch (error) {
+        console.error("Error fetching employees:", error.message);
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+
 export const addEmployee = async (req ,res) => {
     try {
         const {name , email, phone, designation, salary } = req.body
@@ -37,7 +83,7 @@ export const addEmployee = async (req ,res) => {
 
         res.status(201).json({ message: "Employee added successfully", employee })
     } catch (error) {
-        console.error("Error adding employee:", error);
+        console.error("Error adding employee:", error.message);
         res.status(500).json({ message: "Internal server error" });
     }
 }
@@ -68,7 +114,7 @@ export const editEmployee = async (req , res) => {
             if(employee.profilePic) {
                 const oldPath = path.join("uploads/employees", employee.profilePic)
                 if(fs.existsSync(oldPath)) {
-                    fs.unlink(oldPath)
+                    fs.unlinkSync(oldPath)
                 }
             }
             employee.profilePic = req.file.filename
@@ -84,7 +130,7 @@ export const editEmployee = async (req , res) => {
 
         res.status(200).json({message: "Employee updated successfully", employee})
     } catch (error) {
-        console.error("Error editing employee:", error);
+        console.error("Error editing employee:", error.message);
         res.status(500).json({ message: "Internal server error" })
     }
 }
@@ -111,9 +157,7 @@ export const deleteEmployee = async (req, res) => {
         res.status(200).json({ message: "Employee deleted successfully" })
 
     } catch (error) {
-        console.error("Error deleting employee:", error);
+        console.error("Error deleting employee:", error.message);
         res.status(500).json({ message: "Internal server error" })
     }
 }
-
-

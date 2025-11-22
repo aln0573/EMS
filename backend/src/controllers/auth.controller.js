@@ -70,7 +70,14 @@ export const Login = async (req ,res) => {
             expiresIn: "7d"
         })
 
-        res.status(200).json({message: "Login Successfull", token, user: {
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
+
+        res.status(200).json({message: "Login Successfull", user: {
             _id: user._id,
             name: user.name,
             email: user.email

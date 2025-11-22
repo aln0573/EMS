@@ -88,3 +88,32 @@ export const editEmployee = async (req , res) => {
         res.status(500).json({ message: "Internal server error" })
     }
 }
+
+
+export const deleteEmployee = async (req, res) => {
+    try {
+        const id = req.params.id
+        const employee = await Employees.findById(id)
+
+        if(!employee){
+            return res.status(404).json({message: "Employee not found"})
+        }
+
+        if(employee.profilePic){
+            const filePath = path.join("uploads/employees", employee.profilePic)
+            if(fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath)
+            }
+        }
+
+        await Employees.findByIdAndDelete(id)
+
+        res.status(200).json({ message: "Employee deleted successfully" })
+
+    } catch (error) {
+        console.error("Error deleting employee:", error);
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+

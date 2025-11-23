@@ -26,7 +26,7 @@ const employeeSchema = new mongoose.Schema({
     salary: {
         type: Number,
     },
-    profilePic: {
+    profileImage: {
         type: String,
         default: null
     },

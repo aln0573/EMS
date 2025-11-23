@@ -39,7 +39,8 @@ export const Register = async (req, res) => {
         res.status(201).json({message: "Registered Successfully", user: {
             _id: newUser._id,
             name: newUser.name,
-            email: newUser.email
+            email: newUser.email,
+            role: newUser.role
         }})
     } catch (error) {
         console.error('Error in Register Controler', error.message);
@@ -81,7 +82,8 @@ export const Login = async (req ,res) => {
         res.status(200).json({message: "Login Successfull", user: {
             _id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            role: user.role
         }})
     } catch (error) {
         console.error("Error in Login Controller:", error.message)

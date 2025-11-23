@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../features/auth/authSlice"; 
+import { loginUser } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -14,7 +14,7 @@ const Login = () => {
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const { email, password } = formData;
@@ -25,7 +25,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginUser(formData)); 
+    dispatch(loginUser(formData));
   };
 
   useEffect(() => {
@@ -34,15 +34,17 @@ const Login = () => {
     }
 
     if (isSuccess || user) {
-      toast.success("Login successful!");
-      navigate("/dashboard");
+      if (user.role === "admin") {
+        navigate("/employees");
+      } else {
+        navigate("/dashboard");
+      }
     }
   }, [isError, isSuccess, user, message, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8">
-        
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Welcome Back
         </h2>
@@ -88,7 +90,6 @@ const Login = () => {
             Register
           </span>
         </p>
-
       </div>
     </div>
   );

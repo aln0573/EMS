@@ -25,7 +25,6 @@ const Navbar = ({
 
   return (
     <nav className="w-full bg-white shadow-md p-4 flex flex-wrap items-center justify-between gap-3">
-      {/* Search */}
       <input
         type="text"
         value={searchText}
@@ -34,7 +33,6 @@ const Navbar = ({
         className="border p-2 rounded w-full md:w-1/3"
       />
 
-      {/* Filter */}
       <select
         defaultValue=""
         onChange={(e) => onFilter(e.target.value)}
@@ -48,7 +46,6 @@ const Navbar = ({
         ))}
       </select>
 
-      {/* Sort */}
       <select
         defaultValue=""
         onChange={(e) => onSort(e.target.value)}

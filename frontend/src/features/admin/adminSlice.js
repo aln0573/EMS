@@ -40,7 +40,6 @@ const adminSlice = createSlice({
     isLoading: false,
   },
   reducers: {
-    // ✅ FIXED: Proper state mutation
     setSearch: (state, action) => {
       state.search = action.payload;
     },
@@ -73,7 +72,7 @@ const adminSlice = createSlice({
       })
       .addCase(loadEmployees.rejected, (state) => {
         state.isLoading = false;
-        state.employees = []; // Prevent undefined error
+        state.employees = [];
       });
   },
 });

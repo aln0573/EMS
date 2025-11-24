@@ -12,20 +12,16 @@ import { fileURLToPath } from "url"
 const app = express()
 const PORT = process.env.PORT
 
-// Resolve directory paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// IMPORTANT: uploads folder is OUTSIDE "src", so go one level up
 const uploadsPath = path.join(__dirname, "..", "uploads");
 const employeeUploads = path.join(uploadsPath, "employees");
 
-// Ensure folders exist
 if (!fs.existsSync(employeeUploads)) {
     fs.mkdirSync(employeeUploads, { recursive: true });
 }
 
-// Serve uploads publicly
 app.use("/uploads", express.static(uploadsPath));
 
 console.log("Serving static files from:", uploadsPath);
@@ -40,11 +36,10 @@ app.use(cors({
     credentials: true
 }));
 
-// Routes
 app.use("/api/auth", authRouter);
 app.use("/api", adminRoute);
 
 app.listen(PORT, () => {
-    console.log(`✅ Server running at http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
     connectDB();
 });

@@ -33,7 +33,6 @@ const Employees = () => {
     totalPages,
   } = useSelector((state) => state.admin);
 
-  // ✅ Load all filters from URL on first load BEFORE loading employees
   useEffect(() => {
     const pageFromUrl = Number(searchParams.get("page")) || 1;
 
@@ -47,16 +46,13 @@ const Employees = () => {
     dispatch(setDesignation(designationFromUrl));
     dispatch(setSort(sortByFromUrl));
 
-    // Mark as initialized so employees can load
     setIsInitialized(true);
   }, []);
 
-  // ✅ Load designations
   useEffect(() => {
     dispatch(loadDesignations());
   }, [dispatch]);
 
-  // ✅ Load employees ONLY after initialization
   useEffect(() => {
     if (!isInitialized) return;
 
@@ -71,7 +67,6 @@ const Employees = () => {
     );
   }, [page, search, designation, sortBy, sortOrder, dispatch, isInitialized]);
 
-  // ✅ Sync URL params whenever filters change
   useEffect(() => {
     if (!isInitialized) return;
 
@@ -157,7 +152,6 @@ const Employees = () => {
 
       <EmployeeTable employees={employees} onDelete={handleDelete} />
 
-      {/* Pagination */}
       <div className="flex justify-center mt-4 gap-4">
         <button
           disabled={page === 1}
